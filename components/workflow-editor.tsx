@@ -177,7 +177,15 @@ export function WorkflowEditor({
   const [saveWorkflow, saveState] = useMutation(SAVE_WORKFLOW);
   const [triggerRun, runState] = useMutation(TRIGGER_RUN);
   const [approveStep, approvalState] = useMutation(APPROVE_STEP);
-  const [draft, setDraft] = useState<InitialWorkflowDraft | null>(initialDraft ?? null);
+  const [draft, setDraft] = useState<InitialWorkflowDraft>(initialDraft ?? {
+    id: workflowId,
+    name: "",
+    description: "",
+    isActive: true,
+    steps: [],
+    triggers: [],
+  });
+  const [draftLoaded, setDraftLoaded] = useState(Boolean(initialDraft));
   const [saved, setSaved] = useState(!isNew);
   const [runInput, setRunInput] = useState('{\n  "message": "Customer says their production system has been down for 5 hours."\n}');
   const [notice, setNotice] = useState("");
@@ -185,8 +193,9 @@ export function WorkflowEditor({
 
   useEffect(() => {
     const workflow = data?.workflows_by_pk;
-    if (!workflow || draft) return;
-    const timer = window.setTimeout(() => setDraft({
+    if (!workflow || draftLoaded) return;
+    const timer = window.setTimeout(() => {
+      setDraft({
         id: workflow.id,
         name: workflow.name,
         description: workflow.description,
@@ -199,9 +208,11 @@ export function WorkflowEditor({
           nextRunAt: trigger.next_run_at,
           isActive: trigger.is_active,
         })),
-      }), 0);
+      });
+      setDraftLoaded(true);
+    }, 0);
     return () => window.clearTimeout(timer);
-  }, [data, draft]);
+  }, [data, draftLoaded]);
 
   const organization = data?.organizations[0];
   const orgId = organization?.id ?? (isNew ? organizationId : data?.workflows_by_pk?.org_id ?? organizationId);
@@ -219,12 +230,12 @@ export function WorkflowEditor({
     })}'`;
   })();
 
-  if ((loading && !draft) || !draft) {
+  if ((loading && !draftLoaded) || !draftLoaded) {
     return <div className="page-loader"><span className="spinner" /> Loading workflow…</div>;
   }
 
   function updateStep(id: string, patch: Partial<EditorStep>) {
-    setDraft((current) => current && ({
+    setDraft((current) => ({
       ...current,
       steps: current.steps.map((step) => step.id === id ? { ...step, ...patch } : step),
     }));
