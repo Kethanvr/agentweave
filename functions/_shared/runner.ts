@@ -356,7 +356,7 @@ async function withRetry<T extends JsonValue>(stepRunId: string, operation: () =
 async function callGemini(config: Record<string, JsonValue>, input: JsonValue): Promise<JsonValue> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new AppError("GEMINI_API_KEY is not configured", "CONFIGURATION");
-  const model = String(config.model ?? "gemini-2.0-flash");
+  const model = String(config.model ?? "gemini-3.6-flash");
   const prompt = renderString(String(config.prompt ?? "Classify this input as JSON: {{input}}"), input, input);
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
@@ -365,7 +365,17 @@ async function callGemini(config: Record<string, JsonValue>, input: JsonValue): 
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { responseMimeType: "application/json", temperature: 0.1 },
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "OBJECT",
+            properties: {
+              priority: { type: "STRING", enum: ["URGENT", "NORMAL"] },
+              reason: { type: "STRING" },
+            },
+            required: ["priority", "reason"],
+          },
+        },
       }),
       signal: AbortSignal.timeout(10_000),
     },

@@ -25,7 +25,7 @@ export default async function WorkflowPage({
         {
           id: stepIds[0], position: 0, name: "Classify escalation", type: "llm_call",
           config: {
-            model: "gemini-2.0-flash",
+            model: "gemini-3.6-flash",
             prompt: "Return JSON with keys priority and reason. Use priority URGENT when this describes a production outage or severe service disruption; otherwise NORMAL. Customer message: {{input.message}}",
           },
         },
@@ -72,4 +72,3 @@ export default async function WorkflowPage({
     />
   );
 }
-
