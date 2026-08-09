@@ -1,5 +1,13 @@
 [global]
 
+[[global.environment]]
+name = 'GEMINI_API_KEY'
+value = '{{ secrets.GEMINI_API_KEY }}'
+
+[[global.environment]]
+name = 'RESEND_API_KEY'
+value = '{{ secrets.RESEND_API_KEY }}'
+
 [hasura]
 version = 'v2.48.10-ce'
 adminSecret = '{{ secrets.HASURA_GRAPHQL_ADMIN_SECRET }}'
@@ -182,4 +190,3 @@ adminPassword = '{{ secrets.GRAFANA_ADMIN_PASSWORD }}'
 [observability.grafana.alerting]
 enabled = false
 [observability.grafana.contacts]
-
