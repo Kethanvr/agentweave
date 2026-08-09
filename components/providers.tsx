@@ -11,7 +11,7 @@ import { ApolloProvider } from "@apollo/client/react";
 import type { Session } from "@nhost/nhost-js/session";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient as createWsClient } from "graphql-ws";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
 import { graphqlHttpUrl, graphqlWsUrl, nhost } from "@/lib/nhost";
 
 type AuthContextValue = {
@@ -29,17 +29,12 @@ export function useAuth() {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setSession(nhost.getUserSession());
-    setLoading(false);
-    return nhost.sessionStorage.onChange((nextSession) => {
-      setSession(nextSession);
-      setLoading(false);
-    });
-  }, []);
+  const session = useSyncExternalStore(
+    (onStoreChange) => nhost.sessionStorage.onChange(() => onStoreChange()),
+    () => nhost.getUserSession(),
+    () => null,
+  );
+  const loading = false;
 
   const clients = useMemo(() => {
     const httpLink = new HttpLink({
@@ -73,7 +68,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       apollo: new ApolloClient({ link, cache: new InMemoryCache() }),
       dispose: () => wsClient.dispose(),
     };
-  }, [session?.accessToken]);
+  }, []);
 
   useEffect(() => clients.dispose, [clients]);
 
@@ -93,4 +88,3 @@ export function Providers({ children }: { children: React.ReactNode }) {
     </AuthContext.Provider>
   );
 }
-

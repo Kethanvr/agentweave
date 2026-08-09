@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/components/providers";
 import { graphqlHttpUrl } from "@/lib/nhost";
 import type { EditorStep, EditorTrigger, OrgRole, RunStep, StepType, TriggerType } from "@/lib/types";
@@ -186,20 +186,21 @@ export function WorkflowEditor({
   useEffect(() => {
     const workflow = data?.workflows_by_pk;
     if (!workflow || draft) return;
-    setDraft({
-      id: workflow.id,
-      name: workflow.name,
-      description: workflow.description,
-      isActive: workflow.is_active,
-      steps: workflow.steps,
-      triggers: workflow.triggers.map((trigger) => ({
-        id: trigger.id,
-        type: trigger.type,
-        config: trigger.config,
-        nextRunAt: trigger.next_run_at,
-        isActive: trigger.is_active,
-      })),
-    });
+    const timer = window.setTimeout(() => setDraft({
+        id: workflow.id,
+        name: workflow.name,
+        description: workflow.description,
+        isActive: workflow.is_active,
+        steps: workflow.steps,
+        triggers: workflow.triggers.map((trigger) => ({
+          id: trigger.id,
+          type: trigger.type,
+          config: trigger.config,
+          nextRunAt: trigger.next_run_at,
+          isActive: trigger.is_active,
+        })),
+      }), 0);
+    return () => window.clearTimeout(timer);
   }, [data, draft]);
 
   const organization = data?.organizations[0];
@@ -210,13 +211,13 @@ export function WorkflowEditor({
   const awaitingApproval = liveRun?.step_runs.find((step) => step.status === "awaiting_approval");
 
   const webhookTrigger = draft?.triggers.find((trigger) => trigger.type === "webhook");
-  const webhookCurl = useMemo(() => {
+  const webhookCurl = (() => {
     if (!webhookTrigger?.secret) return "Save a new webhook secret to generate the test command.";
     return `curl '${graphqlHttpUrl}' -H 'content-type: application/json' --data '${JSON.stringify({
       query: "mutation Webhook($workflowId: uuid!, $secret: String!, $input: jsonb) { triggerWorkflowWebhook(workflowId: $workflowId, secret: $secret, input: $input) { runId status } }",
       variables: { workflowId, secret: webhookTrigger.secret, input: { message: "Production has been down for 5 hours" } },
     })}'`;
-  }, [webhookTrigger?.secret, workflowId]);
+  })();
 
   if ((loading && !draft) || !draft) {
     return <div className="page-loader"><span className="spinner" /> Loading workflow…</div>;
@@ -480,4 +481,3 @@ function RunStepRow({ step }: { step: RunStep }) {
     </details>
   );
 }
-

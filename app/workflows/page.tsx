@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
 import { Activity, ArrowRight, Clock3, Plus, ShieldCheck, Workflow as WorkflowIcon, Zap } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAuth } from "@/components/providers";
 import type { OrgRole } from "@/lib/types";
 
@@ -65,10 +65,6 @@ export default function WorkflowsPage() {
   });
   const [selectedOrgId, setSelectedOrgId] = useState("");
 
-  useEffect(() => {
-    if (!selectedOrgId && data?.organizations[0]) setSelectedOrgId(data.organizations[0].id);
-  }, [data, selectedOrgId]);
-
   const organization = useMemo(
     () => data?.organizations.find((org) => org.id === selectedOrgId) ?? data?.organizations[0],
     [data, selectedOrgId],
@@ -108,7 +104,7 @@ export default function WorkflowsPage() {
               <span className="avatar org">{organization.name.slice(0, 1)}</span>
               <label>
                 Organization
-                <select value={organization.id} onChange={(event) => setSelectedOrgId(event.target.value)}>
+                <select value={selectedOrgId || organization.id} onChange={(event) => setSelectedOrgId(event.target.value)}>
                   {data?.organizations.map((org) => <option value={org.id} key={org.id}>{org.name}</option>)}
                 </select>
               </label>
