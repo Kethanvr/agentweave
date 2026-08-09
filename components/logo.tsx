@@ -1,0 +1,11 @@
+import { Workflow } from "lucide-react";
+
+export function Logo({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className="brand">
+      <span className="brand-mark"><Workflow size={18} strokeWidth={2.4} /></span>
+      {!compact && <span>AgentWeave</span>}
+    </div>
+  );
+}
+
