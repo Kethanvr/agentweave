@@ -9,6 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@apollo/client": "^4.2.10",
+    "@nhost/nhost-js": "^4.8.0",
+    "graphql": "^16.11.0",
+    "graphql-ws": "^6.0.6",
+    "lucide-react": "^0.468.0",
     "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -21,6 +26,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }
