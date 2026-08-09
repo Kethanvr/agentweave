@@ -183,6 +183,7 @@ textarea { resize: vertical; line-height: 1.5; }
 .step-config { padding: 14px 16px 16px 49px; display: grid; grid-template-columns: 1fr 1fr; gap: 13px; background: #fafbfc; border-top: 1px solid #edf0f3; }
 .step-config .full { grid-column: 1 / -1; }
 .step-config input, .step-config textarea, .step-config select { padding: 8px 9px; font-size: 11px; }
+.field-help { display: block; margin-top: 5px; color: #8a6331; font-size: 9px; font-weight: 600; line-height: 1.4; }
 .owner-note { padding: 11px; display: flex; align-items: flex-start; gap: 9px; color: #287051; background: #eef9f4; border: 1px solid #d3efe1; border-radius: 8px; font-size: 10px; line-height: 1.45; }.owner-note svg { flex: 0 0 auto; }
 .inspector-panel { min-width: 0; display: grid; align-content: start; gap: 15px; }
 .side-section { padding: 18px; }

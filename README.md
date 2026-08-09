@@ -93,7 +93,7 @@ The notification is inserted into PostgreSQL, delivered through a Hasura Event T
    Manual trigger: enabled
    ```
 
-5. Set the notification recipient to your own test email. Keep `db_write` and `notify` as owner-only steps.
+5. Set the notification recipient to an email address you can verify. Keep `db_write` and `notify` as owner-only steps.
 6. Select **Save** and wait for `Workflow saved securely.` The **Run** button becomes available only after a successful save.
 7. Use this run input:
 
@@ -107,6 +107,9 @@ The notification is inserted into PostgreSQL, delivered through a Hasura Event T
 9. When the run becomes **paused**, select **Approve** on the awaiting approval step.
 10. Confirm the same run resumes at `db_write`, queues the notification, reaches **completed**, and increments monthly usage by one.
 11. Confirm the notification outbox is `sent` and the message arrives through Resend.
+
+> [!IMPORTANT]
+> The hosted demo sends from `notifications@emailagentweave.kethanvr.tech`, a verified Resend domain. It can deliver to any valid recipient. Delivery normally occurs within a few seconds after approval and workflow completion; Hasura retries temporary Event Trigger failures twice at 10-second intervals.
 
 ### Manual role and isolation checks
 
@@ -231,11 +234,11 @@ Nhost Cloud Function environment variables:
 ```text
 GEMINI_API_KEY={{ secrets.GEMINI_API_KEY }}
 RESEND_API_KEY={{ secrets.RESEND_API_KEY }}
-RESEND_FROM_EMAIL=AgentWeave <onboarding@resend.dev>
+RESEND_FROM_EMAIL=AgentWeave <notifications@emailagentweave.kethanvr.tech>
 DEMO_NOTIFICATION_EMAIL
 ```
 
-The `onboarding@resend.dev` sender is suitable for the public demo only and can send to the email address associated with the Resend account. After verifying a custom sending domain, replace it with a mailbox such as `AgentWeave <notifications@mail.example.com>`.
+Resend accepts any sender mailbox under the verified `emailagentweave.kethanvr.tech` domain; the mailbox does not need a separate Resend identity.
 
 Nhost supplies `NHOST_GRAPHQL_URL`, `NHOST_ADMIN_SECRET`, and `NHOST_WEBHOOK_SECRET` to Functions. Gemini, Hasura admin, Resend, and webhook secrets are never sent to the browser.
 

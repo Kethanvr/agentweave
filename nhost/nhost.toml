@@ -10,7 +10,7 @@ value = '{{ secrets.RESEND_API_KEY }}'
 
 [[global.environment]]
 name = 'RESEND_FROM_EMAIL'
-value = 'AgentWeave <onboarding@resend.dev>'
+value = 'AgentWeave <notifications@emailagentweave.kethanvr.tech>'
 
 [hasura]
 version = 'v2.48.10-ce'

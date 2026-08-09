@@ -48,7 +48,7 @@ export default async function WorkflowPage({
         {
           id: stepIds[5], position: 5, name: "Notify response team", type: "notify",
           config: {
-            recipient: "",
+            recipient: "kethanvr@gmail.com",
             subject: "Urgent customer escalation approved",
             body: "AgentWeave completed the escalation workflow. Saved output: {{previousOutput}}",
           },
