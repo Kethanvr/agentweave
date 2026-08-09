@@ -173,9 +173,7 @@ FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 CREATE TRIGGER notification_outbox_set_updated_at BEFORE UPDATE ON public.notification_outbox
 FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
-CREATE OR REPLACE VIEW public.organization_current_usage
-WITH (security_invoker = true)
-AS
+CREATE OR REPLACE VIEW public.organization_current_usage AS
 SELECT
   o.id AS org_id,
   date_trunc('month', now())::date AS period_start,

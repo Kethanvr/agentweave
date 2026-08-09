@@ -41,8 +41,6 @@
   object_relationships:
     - name: organization
       using: { foreign_key_constraint_on: org_id }
-    - name: user
-      using: { foreign_key_constraint_on: user_id }
   select_permissions:
     - role: user
       permission:
@@ -88,8 +86,6 @@
   object_relationships:
     - name: organization
       using: { foreign_key_constraint_on: org_id }
-    - name: creator
-      using: { foreign_key_constraint_on: created_by }
   array_relationships:
     - name: steps
       using:
@@ -331,8 +327,6 @@
   object_relationships:
     - name: workflow
       using: { foreign_key_constraint_on: workflow_id }
-    - name: actor
-      using: { foreign_key_constraint_on: triggered_by }
   array_relationships:
     - name: step_runs
       using:
@@ -357,8 +351,6 @@
       using: { foreign_key_constraint_on: workflow_run_id }
     - name: step
       using: { foreign_key_constraint_on: workflow_step_id }
-    - name: approver
-      using: { foreign_key_constraint_on: approved_by }
   select_permissions:
     - role: user
       permission:
@@ -495,4 +487,3 @@
                 _and:
                   - user_id: { _eq: X-Hasura-User-Id }
                   - role: { _in: [owner, editor] }
-

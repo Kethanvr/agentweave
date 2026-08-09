@@ -73,18 +73,24 @@ const accounts = [
   { email: "editor@orgb.agentweave.demo", name: "Org B Editor", org: "b", role: "editor" },
 ];
 
-const orgA = await ensureOrganization("Northstar Support", "northstar-support");
-const orgB = await ensureOrganization("Helix Operations", "helix-operations");
+async function main() {
+  const orgA = await ensureOrganization("Northstar Support", "northstar-support");
+  const orgB = await ensureOrganization("Helix Operations", "helix-operations");
 
-for (const account of accounts) {
-  const userId = await ensureUser(account.email, account.name);
-  await addMember(account.org === "a" ? orgA : orgB, userId, account.role);
+  for (const account of accounts) {
+    const userId = await ensureUser(account.email, account.name);
+    await addMember(account.org === "a" ? orgA : orgB, userId, account.role);
+  }
+
+  console.log("AgentWeave demo organizations are ready.");
+  console.log(`Org A: ${orgA}`);
+  console.log(`Org B: ${orgB}`);
+  console.log("Accounts:");
+  for (const account of accounts) console.log(`- ${account.email} (${account.role})`);
+  console.log("Passwords are read from DEMO_PASSWORD and were not printed.");
 }
 
-console.log("AgentWeave demo organizations are ready.");
-console.log(`Org A: ${orgA}`);
-console.log(`Org B: ${orgB}`);
-console.log("Accounts:");
-for (const account of accounts) console.log(`- ${account.email} (${account.role})`);
-console.log("Passwords are read from DEMO_PASSWORD and were not printed.");
-
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exitCode = 1;
+});
