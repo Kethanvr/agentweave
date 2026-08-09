@@ -20,12 +20,13 @@ public_escaped=$(escape_key "$public_key")
 umask 077
 {
   printf "GRAFANA_ADMIN_PASSWORD = 'grafana-admin-password'\n"
+  printf "GEMINI_API_KEY = 'replace-with-gemini-key'\n"
   printf "HASURA_GRAPHQL_ADMIN_SECRET = 'nhost-admin-secret'\n"
   printf "NHOST_JWT_KID = '%s'\n" "$jwt_kid"
   printf 'NHOST_JWT_PRIVATE_KEY = "%s"\n' "$private_escaped"
   printf 'NHOST_JWT_PUBLIC_KEY = "%s"\n' "$public_escaped"
   printf "NHOST_WEBHOOK_SECRET = 'nhost-webhook-secret'\n"
+  printf "RESEND_API_KEY = 'replace-with-resend-key'\n"
 } > .secrets
 
 echo "Created local-only .secrets with a fresh JWT key pair."
-

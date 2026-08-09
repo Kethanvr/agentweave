@@ -1,22 +1,23 @@
 # AgentWeave Demo Walkthrough
 
-This script is designed for a short reviewer recording after the Vercel and Nhost Cloud smoke tests pass.
+This script is designed for a short reviewer recording after the Vercel and Nhost Cloud smoke tests pass. Start at [agentweave.kethanvr.tech/login](https://agentweave.kethanvr.tech/login).
 
 ## 1. Happy path
 
-1. Sign in as `owner@orga.agentweave.demo` using the privately supplied password.
-2. Open **Customer Escalation Workflow** in **Northstar Support**.
-3. Show the vertical steps, four trigger types, role badge, and quota indicator.
-4. Run this input:
+1. Choose the Owner demo account, `owner@orga.agentweave.demo`, and use the password displayed on the login page.
+2. In **Northstar Support**, select **New workflow** to load **Customer Escalation Workflow**.
+3. Set the Notify recipient to an email address you can verify, then select **Save**.
+4. Show the vertical steps, four trigger types, role badge, and quota indicator.
+5. Run this input:
 
    ```text
    Customer says their production system has been down for 5 hours.
    ```
 
-5. Watch Gemini classify it as urgent, the conditional choose the urgent path, and the HTTPS request complete in the live timeline.
-6. When the approval card appears, approve the waiting step.
-7. Show the run resuming without rerunning earlier steps, the database output being saved, the notification being queued, and the run completing.
-8. Show the quota count increasing and the Resend delivery/event result.
+6. Watch Gemini classify it as urgent, the conditional choose the urgent path, and the HTTPS request complete in the live timeline.
+7. When the approval card appears, approve the waiting step.
+8. Show the run resuming without rerunning earlier steps, the database output being saved, the notification being queued, and the run completing.
+9. Show the quota count increasing and the Resend delivery/event result.
 
 ## 2. Role enforcement
 
@@ -61,4 +62,4 @@ Finish by noting that these checks bypass the UI entirely: organization isolatio
 - The workflow HTTP endpoint is reachable over HTTPS.
 - Manual, webhook, scheduled, and database-event smoke tests have run in production.
 - `npm run lint`, `npm run typecheck`, and `npm run build` pass from a clean checkout.
-- Reviewer password and production URL are shared privately, not committed.
+- The production URL and intentionally public reviewer password match the login page; real service secrets remain private.

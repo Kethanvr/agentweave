@@ -10,6 +10,16 @@
 
 AgentWeave is a working multi-tenant workflow application built with Next.js, Nhost Auth, Hasura GraphQL, PostgreSQL, Nhost Functions, Gemini, and Resend. It demonstrates organization-scoped authorization, live execution updates, protected approval/resume, quota enforcement, and four ways to start the same workflow runner.
 
+## Live deployment
+
+| Service | URL |
+| --- | --- |
+| Application | [agentweave.kethanvr.tech](https://agentweave.kethanvr.tech) |
+| Reviewer login | [agentweave.kethanvr.tech/login](https://agentweave.kethanvr.tech/login) |
+| Nhost GraphQL API | [nfldghkngnbyryttgdkh.graphql.ap-south-1.nhost.run/v1](https://nfldghkngnbyryttgdkh.graphql.ap-south-1.nhost.run/v1) |
+| Nhost Auth health | [nfldghkngnbyryttgdkh.auth.ap-south-1.nhost.run/v1/healthz](https://nfldghkngnbyryttgdkh.auth.ap-south-1.nhost.run/v1/healthz) |
+| Source | [github.com/Kethanvr/agentweave](https://github.com/Kethanvr/agentweave) |
+
 ## Demonstrated scenario
 
 ```text
@@ -34,15 +44,58 @@ The workflow detail page streams `step_runs` over GraphQL subscriptions, so runn
 ## Product walkthrough
 
 > [!NOTE]
-> These slots are intentionally reserved for real screenshots from the hosted application. Replace each placeholder after the final Vercel and Nhost Cloud smoke test; generated artwork should not be presented as evidence that the product works.
+> These slots are reserved for original full-resolution captures from the hosted application. Generated artwork is kept separate and is never presented as execution evidence.
 
-| Workflow dashboard | Vertical workflow builder |
+| Configured workflow builder | Owner-only protected steps |
 | --- | --- |
-| 📷 **Production screenshot placeholder**<br><sub>Add the organization switcher, role badge, quota, and workflow list.</sub> | 📷 **Production screenshot placeholder**<br><sub>Add the configured Customer Escalation Workflow.</sub> |
+| 📷 **Upload `workflow-builder.png`**<br><sub>Use the Editor capture with the correct Gemini model, conditional targets, triggers, and run input.</sub> | 📷 **Upload `owner-only-steps.png`**<br><sub>Use the Owner capture showing approval, database write, and notification configuration.</sub> |
 
-| Paused approval gate | Completed run and email |
+| Viewer read-only enforcement | Completed execution evidence |
 | --- | --- |
-| 📷 **Production screenshot placeholder**<br><sub>Add the live timeline paused at `awaiting_approval`.</sub> | 📷 **Production screenshot placeholder**<br><sub>Add the completed timeline and Resend delivery proof.</sub> |
+| 📷 **Upload `viewer-read-only.png`**<br><sub>Use the Viewer capture showing the role badge and absence of the New workflow control.</sub> | 📷 **Upload `run-completed.png`**<br><sub>Capture the paused approval, completed timeline, and Resend delivery proof after the final smoke test.</sub> |
+
+## Run the production workflow
+
+1. Open the [reviewer login](https://agentweave.kethanvr.tech/login), choose **Owner**, and sign in with the displayed demo password.
+2. On **Workflows**, confirm the organization is **Northstar Support**, the badge is **Owner**, and quota is available.
+3. Select **New workflow**. AgentWeave preloads the six-step **Customer Escalation Workflow**.
+4. Confirm the important configuration before saving:
+
+   ```text
+   Gemini model: gemini-3.6-flash
+   Conditional field: priority
+   Conditional value: URGENT
+   Urgent target: Enrich incident
+   False target: Human approval
+   HTTP URL: https://postman-echo.com/post
+   Notify recipient: an email address you can verify
+   Manual trigger: enabled
+   ```
+
+5. Set the notification recipient to your own test email. Keep `db_write` and `notify` as owner-only steps.
+6. Select **Save** and wait for `Workflow saved securely.` The **Run** button becomes available only after a successful save.
+7. Use this run input:
+
+   ```json
+   {
+     "message": "Customer says their production system has been down for 5 hours."
+   }
+   ```
+
+8. Select **Run**. The live monitor should show Gemini classification, the urgent branch, and the HTTPS enrichment step.
+9. When the run becomes **paused**, select **Approve** on the awaiting approval step.
+10. Confirm the same run resumes at `db_write`, queues the notification, reaches **completed**, and increments monthly usage by one.
+11. Confirm the notification outbox is `sent` and the message arrives through Resend.
+
+### Manual role and isolation checks
+
+- **Editor:** sign in as `editor@orga.agentweave.demo`; safe steps, execution, and approval are available, while owner-only restricted configuration remains unavailable.
+- **Viewer:** sign in as `viewer@orga.agentweave.demo`; verify there is no **New workflow**, **Save**, **Run**, or **Approve** control.
+- **Org B:** sign in as `editor@orgb.agentweave.demo`; an Org A workflow ID must not appear in queries, and guessed trigger/approval IDs must return `FORBIDDEN`.
+- **Duplicate approval:** approve the same `stepRunId` twice; the second request must fail and must not resume the run again.
+- **Quota:** set an organization's allowance to its current usage, then confirm a new start returns `QUOTA_EXHAUSTED`; restore the allowance after the check.
+
+The exact GraphQL attack queries and expected responses are documented in [DEMO.md](./DEMO.md).
 
 ## Stack
 
@@ -142,13 +195,21 @@ Browser variables:
 ```text
 NEXT_PUBLIC_NHOST_SUBDOMAIN
 NEXT_PUBLIC_NHOST_REGION
+NEXT_PUBLIC_DEMO_PASSWORD
 ```
 
-Nhost Cloud Function secrets:
+Nhost Cloud secrets:
 
 ```text
 GEMINI_API_KEY
 RESEND_API_KEY
+```
+
+Nhost Cloud Function environment variables:
+
+```text
+GEMINI_API_KEY={{ secrets.GEMINI_API_KEY }}
+RESEND_API_KEY={{ secrets.RESEND_API_KEY }}
 RESEND_FROM_EMAIL
 DEMO_NOTIFICATION_EMAIL
 ```
@@ -205,8 +266,10 @@ The checked scenario verifies that Org B receives `null` when querying an Org A 
 
 ## Deployment
 
-1. Create an Nhost Cloud project and connect this repository so migrations, metadata, and root `functions/` deploy together.
-2. Add the four Function secrets listed above. Use a verified Resend sender/domain.
+The production frontend is deployed on Vercel at `agentweave.kethanvr.tech`; the backend project is `nfldghkngnbyryttgdkh` in Nhost `ap-south-1`.
+
+1. Connect this repository to Nhost so migrations, metadata, and root `functions/` deploy together.
+2. Add the two integration secrets and four Function environment variables listed above. Use a verified Resend sender/domain.
 3. Run the bootstrap script against the Cloud Auth and GraphQL URLs using the Cloud admin secret and the shared demo password.
 4. Import the repository into Vercel and set `NEXT_PUBLIC_NHOST_SUBDOMAIN`, `NEXT_PUBLIC_NHOST_REGION`, and the matching `NEXT_PUBLIC_DEMO_PASSWORD`.
 5. Add the Vercel origin to the Nhost Auth client URL and allowed redirect URLs, then repeat the security checks and the walkthrough in [DEMO.md](./DEMO.md) against production.
