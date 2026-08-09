@@ -22,6 +22,19 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+let cachedSession: Session | null = null;
+let cachedAccessToken: string | null = null;
+
+function readSession(): Session | null {
+  const nextSession = nhost.getUserSession();
+  const nextAccessToken = nextSession?.accessToken ?? null;
+  if (nextAccessToken !== cachedAccessToken) {
+    cachedAccessToken = nextAccessToken;
+    cachedSession = nextSession;
+  }
+  return cachedSession;
+}
+
 export function useAuth() {
   const value = useContext(AuthContext);
   if (!value) throw new Error("useAuth must be used inside Providers");
@@ -30,8 +43,13 @@ export function useAuth() {
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const session = useSyncExternalStore(
-    (onStoreChange) => nhost.sessionStorage.onChange(() => onStoreChange()),
-    () => nhost.getUserSession(),
+    (onStoreChange) => nhost.sessionStorage.onChange(() => {
+      const nextSession = nhost.getUserSession();
+      cachedSession = nextSession;
+      cachedAccessToken = nextSession?.accessToken ?? null;
+      onStoreChange();
+    }),
+    readSession,
     () => null,
   );
   const loading = false;
