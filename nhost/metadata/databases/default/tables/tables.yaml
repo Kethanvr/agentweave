@@ -1,4 +1,11 @@
 - table:
+    schema: auth
+    name: users
+  configuration:
+    custom_root_fields:
+      select: users
+
+- table:
     schema: public
     name: organizations
   array_relationships:
