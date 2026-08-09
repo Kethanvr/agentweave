@@ -82,11 +82,11 @@ Prerequisites: Node.js 20+, Docker, and the [Nhost CLI](https://docs.nhost.io/pl
 
    | Account | Organization | Role |
    | --- | --- | --- |
-   | `owner-a@agentweave.demo` | Northstar Support | owner |
-   | `editor-a@agentweave.demo` | Northstar Support | editor |
-   | `viewer-a@agentweave.demo` | Northstar Support | viewer |
-   | `owner-b@agentweave.demo` | Boundary Labs | owner |
-   | `editor-b@agentweave.demo` | Boundary Labs | editor |
+   | `owner@orga.agentweave.demo` | Northstar Support | owner |
+   | `editor@orga.agentweave.demo` | Northstar Support | editor |
+   | `viewer@orga.agentweave.demo` | Northstar Support | viewer |
+   | `owner@orgb.agentweave.demo` | Helix Operations | owner |
+   | `editor@orgb.agentweave.demo` | Helix Operations | editor |
 
    Share the common `DEMO_PASSWORD` privately with reviewers.
 
