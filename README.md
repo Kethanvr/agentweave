@@ -43,16 +43,37 @@ The workflow detail page streams `step_runs` over GraphQL subscriptions, so runn
 
 ## Product walkthrough
 
-> [!NOTE]
-> These slots are reserved for original full-resolution captures from the hosted application. Generated artwork is kept separate and is never presented as execution evidence.
+### Reviewer-ready login
 
-| Configured workflow builder | Owner-only protected steps |
-| --- | --- |
-| 📷 **Upload `workflow-builder.png`**<br><sub>Use the Editor capture with the correct Gemini model, conditional targets, triggers, and run input.</sub> | 📷 **Upload `owner-only-steps.png`**<br><sub>Use the Owner capture showing approval, database write, and notification configuration.</sub> |
+The hosted login exposes clearly labeled Owner, Editor, and Viewer accounts for assignment review. The warning card makes clear that these shared credentials are a demo-only convenience.
 
-| Viewer read-only enforcement | Completed execution evidence |
+<p align="center">
+  <img src="public/readme/login.png" alt="AgentWeave production login with public reviewer accounts" width="100%" />
+</p>
+
+### Completed AI workflow
+
+The production run shows the Gemini classifier, conditional routing, HTTPS enrichment, human approval, database write, and notification steps completing in one live execution timeline.
+
+<p align="center">
+  <img src="public/readme/workflow-completed.png" alt="Completed Customer Escalation Workflow with live execution timeline" width="100%" />
+</p>
+
+### Workflow dashboard and usage
+
+The organization dashboard exposes role context, monthly quota usage, workflow definitions, and the latest completed or failed run state without mixing data across tenants.
+
+<p align="center">
+  <img src="public/readme/workflow-dashboard.png" alt="AgentWeave workflow dashboard with organization role, quota, and run states" width="100%" />
+</p>
+
+### Event-driven email delivery
+
+The notification is inserted into PostgreSQL, delivered through a Hasura Event Trigger to the Nhost Function, accepted by Resend, and received in the destination inbox.
+
+| Resend delivery confirmation | Received email |
 | --- | --- |
-| 📷 **Upload `viewer-read-only.png`**<br><sub>Use the Viewer capture showing the role badge and absence of the New workflow control.</sub> | 📷 **Upload `run-completed.png`**<br><sub>Capture the paused approval, completed timeline, and Resend delivery proof after the final smoke test.</sub> |
+| <img src="public/readme/resend-delivered.png" alt="Resend dashboard showing the AgentWeave email as delivered" width="100%" /> | <img src="public/readme/email-received.png" alt="AgentWeave production verification email received in Gmail" width="100%" /> |
 
 ## Run the production workflow
 
