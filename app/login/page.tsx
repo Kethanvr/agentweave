@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, CheckCircle2, LockKeyhole, Radio, ShieldCheck } from "lucide-react";
+import { ArrowRight, CheckCircle2, LockKeyhole, Radio, ShieldCheck, TriangleAlert, UserRoundCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { Logo } from "@/components/logo";
@@ -14,6 +14,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const demoPassword = process.env.NEXT_PUBLIC_DEMO_PASSWORD ?? "AgentWeaveDemo@2026";
+  const demoAccounts = [
+    { label: "Owner", email: "owner@orga.agentweave.demo" },
+    { label: "Editor", email: "editor@orga.agentweave.demo" },
+    { label: "Viewer", email: "viewer@orga.agentweave.demo" },
+  ];
 
   useEffect(() => {
     if (!loading && session) router.replace("/workflows");
@@ -63,6 +69,32 @@ export default function LoginPage() {
             Password
             <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" required />
           </label>
+          <aside className="demo-access-card" aria-label="Public demonstration accounts">
+            <div className="demo-access-heading">
+              <TriangleAlert size={17} />
+              <div>
+                <strong>Public demo access</strong>
+                <p>Shown only for reviewer convenience. This card and these shared credentials must be removed in a real production deployment.</p>
+              </div>
+            </div>
+            <div className="demo-account-list">
+              {demoAccounts.map((account) => (
+                <button
+                  key={account.email}
+                  type="button"
+                  onClick={() => {
+                    setEmail(account.email);
+                    setPassword(demoPassword);
+                  }}
+                >
+                  <UserRoundCheck size={14} />
+                  <span><strong>{account.label}</strong><small>{account.email}</small></span>
+                  <em>Use</em>
+                </button>
+              ))}
+            </div>
+            <p className="demo-password"><span>Shared password</span><code>{demoPassword}</code></p>
+          </aside>
           {error && <div className="alert error">{error}</div>}
           <button className="button primary wide" disabled={submitting} type="submit">
             {submitting ? <><span className="spinner small" /> Signing in…</> : <>Sign in <ArrowRight size={17} /></>}
@@ -73,4 +105,3 @@ export default function LoginPage() {
     </main>
   );
 }
-

@@ -1,11 +1,12 @@
-import { Workflow } from "lucide-react";
+import Image from "next/image";
 
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="brand">
-      <span className="brand-mark"><Workflow size={18} strokeWidth={2.4} /></span>
+    <div className={compact ? "brand compact" : "brand"}>
+      <span className="brand-mark" aria-hidden="true">
+        <Image src="/logo.png" alt="" width={80} height={80} sizes="38px" priority />
+      </span>
       {!compact && <span>AgentWeave</span>}
     </div>
   );
 }
-

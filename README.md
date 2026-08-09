@@ -1,5 +1,13 @@
 # AgentWeave — Secure Multi-Tenant AI Workflow Orchestration Platform
 
+<p align="center">
+  <img src="public/logo.png" alt="AgentWeave logo" width="190" />
+</p>
+
+<p align="center">
+  <img src="public/readme/hero.png" alt="AgentWeave secure AI workflow orchestration" width="100%" />
+</p>
+
 AgentWeave is a working multi-tenant workflow application built with Next.js, Nhost Auth, Hasura GraphQL, PostgreSQL, Nhost Functions, Gemini, and Resend. It demonstrates organization-scoped authorization, live execution updates, protected approval/resume, quota enforcement, and four ways to start the same workflow runner.
 
 ## Demonstrated scenario
@@ -19,6 +27,23 @@ Customer message
 
 The workflow detail page streams `step_runs` over GraphQL subscriptions, so running, skipped, awaiting-approval, failed, and completed states appear without a refresh.
 
+<p align="center">
+  <img src="public/readme/workflow-lifecycle.png" alt="AgentWeave customer escalation workflow lifecycle" width="100%" />
+</p>
+
+## Product walkthrough
+
+> [!NOTE]
+> These slots are intentionally reserved for real screenshots from the hosted application. Replace each placeholder after the final Vercel and Nhost Cloud smoke test; generated artwork should not be presented as evidence that the product works.
+
+| Workflow dashboard | Vertical workflow builder |
+| --- | --- |
+| 📷 **Production screenshot placeholder**<br><sub>Add the organization switcher, role badge, quota, and workflow list.</sub> | 📷 **Production screenshot placeholder**<br><sub>Add the configured Customer Escalation Workflow.</sub> |
+
+| Paused approval gate | Completed run and email |
+| --- | --- |
+| 📷 **Production screenshot placeholder**<br><sub>Add the live timeline paused at `awaiting_approval`.</sub> | 📷 **Production screenshot placeholder**<br><sub>Add the completed timeline and Resend delivery proof.</sub> |
+
 ## Stack
 
 - Next.js 16, React 19, TypeScript, Tailwind CSS
@@ -28,6 +53,14 @@ The workflow detail page streams `step_runs` over GraphQL subscriptions, so runn
 - Gemini structured output
 - Resend email delivery through a Hasura Event Trigger
 - Vercel frontend and Nhost Cloud backend
+
+## Architecture
+
+<p align="center">
+  <img src="public/readme/architecture.png" alt="AgentWeave application architecture" width="100%" />
+</p>
+
+The browser authenticates with Nhost and uses Hasura queries, mutations, Actions, and subscriptions. Manual, webhook, scheduled, and database-event entry points converge on the same Nhost Function workflow runner.
 
 ## Repository map
 
@@ -67,7 +100,7 @@ Prerequisites: Node.js 20+, Docker, and the [Nhost CLI](https://docs.nhost.io/pl
    cp .env.example .env.local
    ```
 
-   Replace the local admin secret with the value in the ignored `.secrets` file. Set `DEMO_PASSWORD` to a private password of at least nine characters. Do not commit either value.
+   Replace the local admin secret with the value in the ignored `.secrets` file. The included demo password is intentionally public for reviewer access; use the same value for `DEMO_PASSWORD` and `NEXT_PUBLIC_DEMO_PASSWORD` when seeding. Replace or remove it outside this demonstration.
 
 4. Seed two organizations and five role-specific users.
 
@@ -88,7 +121,7 @@ Prerequisites: Node.js 20+, Docker, and the [Nhost CLI](https://docs.nhost.io/pl
    | `owner@orgb.agentweave.demo` | Helix Operations | owner |
    | `editor@orgb.agentweave.demo` | Helix Operations | editor |
 
-   Share the common `DEMO_PASSWORD` privately with reviewers.
+   The login page shows these accounts and the shared password for easy reviewer access. This is a deliberate demo-only exception and is prominently labeled for removal in a real deployment.
 
 5. Start the frontend.
 
@@ -137,6 +170,10 @@ All users authenticate under the normal Hasura `user` role. Organization authori
 
 For the full request and data flow, see [ARCHITECTURE.md](./ARCHITECTURE.md).
 
+<p align="center">
+  <img src="public/readme/multi-tenant-security.png" alt="AgentWeave multi-tenant authorization layers" width="100%" />
+</p>
+
 ## GraphQL API
 
 Hasura Actions expose:
@@ -170,8 +207,8 @@ The checked scenario verifies that Org B receives `null` when querying an Org A 
 
 1. Create an Nhost Cloud project and connect this repository so migrations, metadata, and root `functions/` deploy together.
 2. Add the four Function secrets listed above. Use a verified Resend sender/domain.
-3. Run the bootstrap script against the Cloud Auth and GraphQL URLs using the Cloud admin secret and a private reviewer password.
-4. Import the repository into Vercel and set `NEXT_PUBLIC_NHOST_SUBDOMAIN` and `NEXT_PUBLIC_NHOST_REGION` from the Nhost project.
+3. Run the bootstrap script against the Cloud Auth and GraphQL URLs using the Cloud admin secret and the shared demo password.
+4. Import the repository into Vercel and set `NEXT_PUBLIC_NHOST_SUBDOMAIN`, `NEXT_PUBLIC_NHOST_REGION`, and the matching `NEXT_PUBLIC_DEMO_PASSWORD`.
 5. Add the Vercel origin to the Nhost Auth client URL and allowed redirect URLs, then repeat the security checks and the walkthrough in [DEMO.md](./DEMO.md) against production.
 
-No credentials, API keys, webhook secrets, or reviewer passwords are committed to this repository.
+No API keys, Hasura admin secrets, webhook secrets, Gemini keys, or Resend keys are committed. The shared demo login is intentionally public and must be removed or replaced before adapting this project for real users.
