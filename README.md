@@ -210,9 +210,11 @@ Nhost Cloud Function environment variables:
 ```text
 GEMINI_API_KEY={{ secrets.GEMINI_API_KEY }}
 RESEND_API_KEY={{ secrets.RESEND_API_KEY }}
-RESEND_FROM_EMAIL
+RESEND_FROM_EMAIL=AgentWeave <onboarding@resend.dev>
 DEMO_NOTIFICATION_EMAIL
 ```
+
+The `onboarding@resend.dev` sender is suitable for the public demo only and can send to the email address associated with the Resend account. After verifying a custom sending domain, replace it with a mailbox such as `AgentWeave <notifications@mail.example.com>`.
 
 Nhost supplies `NHOST_GRAPHQL_URL`, `NHOST_ADMIN_SECRET`, and `NHOST_WEBHOOK_SECRET` to Functions. Gemini, Hasura admin, Resend, and webhook secrets are never sent to the browser.
 

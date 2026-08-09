@@ -8,6 +8,10 @@ value = '{{ secrets.GEMINI_API_KEY }}'
 name = 'RESEND_API_KEY'
 value = '{{ secrets.RESEND_API_KEY }}'
 
+[[global.environment]]
+name = 'RESEND_FROM_EMAIL'
+value = 'AgentWeave <onboarding@resend.dev>'
+
 [hasura]
 version = 'v2.48.10-ce'
 adminSecret = '{{ secrets.HASURA_GRAPHQL_ADMIN_SECRET }}'
