@@ -70,7 +70,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  useEffect(() => clients.dispose, [clients]);
+  useEffect(() => () => { void clients.dispose(); }, [clients]);
 
   const auth = useMemo<AuthContextValue>(() => ({
     session,

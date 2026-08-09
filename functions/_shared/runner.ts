@@ -479,4 +479,3 @@ export async function resumeWorkflow(options: {
     previousOutput: options.previousOutput,
   });
 }
-

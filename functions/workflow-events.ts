@@ -45,4 +45,3 @@ export default async function handler(req: FunctionRequest, res: FunctionRespons
     sendError(res, error);
   }
 }
-

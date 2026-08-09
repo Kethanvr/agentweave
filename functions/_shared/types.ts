@@ -46,4 +46,3 @@ export interface WorkflowDefinition {
   steps: WorkflowStep[];
   triggers: WorkflowTrigger[];
 }
-

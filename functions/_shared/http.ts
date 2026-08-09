@@ -44,4 +44,3 @@ export function sendError(res: FunctionResponse, error: unknown): void {
     extensions: { code: appError.code },
   });
 }
-

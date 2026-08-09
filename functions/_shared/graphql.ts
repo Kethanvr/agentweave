@@ -39,4 +39,3 @@ export function monthStart(): string {
     .toISOString()
     .slice(0, 10);
 }
-

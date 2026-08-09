@@ -37,4 +37,3 @@ export function assertSafeExternalUrl(rawUrl: string): URL {
 
   return url;
 }
-
