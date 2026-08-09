@@ -1,0 +1,46 @@
+actions:
+  - name: saveWorkflow
+    definition:
+      kind: synchronous
+      handler: '{{NHOST_FUNCTIONS_URL}}/workflow-actions'
+      forward_client_headers: true
+      headers:
+        - name: x-nhost-webhook-secret
+          value_from_env: NHOST_WEBHOOK_SECRET
+    permissions:
+      - role: user
+  - name: triggerWorkflowRun
+    definition:
+      kind: synchronous
+      handler: '{{NHOST_FUNCTIONS_URL}}/workflow-actions'
+      forward_client_headers: true
+      headers:
+        - name: x-nhost-webhook-secret
+          value_from_env: NHOST_WEBHOOK_SECRET
+    permissions:
+      - role: user
+  - name: triggerWorkflowWebhook
+    definition:
+      kind: synchronous
+      handler: '{{NHOST_FUNCTIONS_URL}}/workflow-actions'
+      headers:
+        - name: x-nhost-webhook-secret
+          value_from_env: NHOST_WEBHOOK_SECRET
+    permissions:
+      - role: public
+  - name: approveStep
+    definition:
+      kind: synchronous
+      handler: '{{NHOST_FUNCTIONS_URL}}/workflow-actions'
+      forward_client_headers: true
+      headers:
+        - name: x-nhost-webhook-secret
+          value_from_env: NHOST_WEBHOOK_SECRET
+    permissions:
+      - role: user
+custom_types:
+  enums: []
+  input_objects: []
+  objects: []
+  scalars: []
+
