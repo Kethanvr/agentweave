@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "demo:seed": "tsx scripts/bootstrap-demo.ts",
+    "security:test": "tsx scripts/security-check.ts"
   },
   "dependencies": {
     "@apollo/client": "^4.2.10",
