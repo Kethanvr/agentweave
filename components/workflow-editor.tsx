@@ -345,6 +345,20 @@ export function WorkflowEditor({
       {(error || actionError) && <div className="alert error editor-alert"><AlertTriangle size={17} /> {actionError || error?.message}</div>}
       {notice && <div className="alert success editor-alert"><CheckCircle2 size={17} /> {notice}</div>}
 
+      {role !== "viewer" && <section className="quick-run-guide" aria-label="How to run this workflow">
+        <div className="quick-run-copy">
+          <span className="eyebrow"><Play size={13} /> How to run</span>
+          <strong>Edit recipient and settings, then follow these steps</strong>
+        </div>
+        <ol>
+          <li><span>1</span><div><strong>Edit</strong><small>Set the Notify recipient and review the workflow.</small></div></li>
+          <li><span>2</span><div><strong>Save</strong><small>Wait for the secure-save confirmation.</small></div></li>
+          <li><span>3</span><div><strong>Run</strong><small>Start execution with the JSON input.</small></div></li>
+          <li><span>4</span><div><strong>Approve</strong><small>Resume when the live monitor pauses.</small></div></li>
+          <li><span>5</span><div><strong>Verify</strong><small>Confirm completion and email delivery.</small></div></li>
+        </ol>
+      </section>}
+
       <div className="editor-grid">
         <section className="builder-panel">
           <div className="panel-heading">

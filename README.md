@@ -10,6 +10,18 @@
 
 AgentWeave is a working multi-tenant workflow application built with Next.js, Nhost Auth, Hasura GraphQL, PostgreSQL, Nhost Functions, Gemini, and Resend. It demonstrates organization-scoped authorization, live execution updates, protected approval/resume, quota enforcement, and four ways to start the same workflow runner.
 
+## Quick start: run the hosted workflow
+
+1. Open [agentweave.kethanvr.tech/login](https://agentweave.kethanvr.tech/login), choose the **Owner** account, and sign in with the displayed demo password.
+2. Open an existing workflow or select **New workflow**. Review the steps and set the Notify recipient to an email address you can access.
+3. Select **Save** and wait for `Workflow saved securely.` Saving is required before the **Run** button is enabled.
+4. Confirm the run input contains a customer message, then select **Run**. Gemini, conditional routing, and HTTPS enrichment execute first.
+5. When the live monitor shows **Paused**, select **Approve and resume**. AgentWeave then writes the result to PostgreSQL, queues the email, completes the run, and updates quota.
+6. Within a few seconds, verify the email in the recipient inbox and the delivery in Resend. Temporary Event Trigger failures may take up to approximately 30 seconds because Hasura retries twice.
+
+> [!TIP]
+> The correct order is **Edit → Save → Run → Approve and resume → Verify email**. Approval appears only after a run reaches the approval gate.
+
 ## Live deployment
 
 | Service | URL |
