@@ -317,7 +317,11 @@ async function executeStep(options: {
       const recipient = String(step.config.recipient ?? process.env.DEMO_NOTIFICATION_EMAIL ?? "");
       if (!recipient) throw new AppError("Notify step has no recipient", "INVALID_STEP");
       const subject = renderString(String(step.config.subject ?? `AgentWeave: ${workflow.name}`), runInput, previousOutput);
-      const body = renderString(String(step.config.body ?? "Workflow completed: {{previousOutput}}"), runInput, previousOutput);
+      const body = renderString(
+        String(step.config.body ?? "Workflow completed successfully.\nSaved output ID: {{previousOutput.outputId}}"),
+        runInput,
+        previousOutput,
+      );
       const inserted = await adminGraphql<{ insert_notification_outbox_one: { id: string } }>(`
         mutation QueueNotification($object: notification_outbox_insert_input!) {
           insert_notification_outbox_one(object: $object) { id }

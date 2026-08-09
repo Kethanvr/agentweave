@@ -50,7 +50,7 @@ export default async function WorkflowPage({
           config: {
             recipient: "kethanvr@gmail.com",
             subject: "Urgent customer escalation approved",
-            body: "AgentWeave completed the escalation workflow. Saved output: {{previousOutput}}",
+            body: "The customer escalation was approved and completed successfully.\n\nCustomer message: {{input.message}}\nSaved output ID: {{previousOutput.outputId}}\n\nThis notification was delivered by AgentWeave.",
           },
         },
       ],
