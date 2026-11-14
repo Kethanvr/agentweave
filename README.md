@@ -8,26 +8,17 @@
   <img src="public/readme/hero.png" alt="AgentWeave secure AI workflow orchestration" width="100%" />
 </p>
 
-AgentWeave is a working multi-tenant workflow application built with Next.js, Nhost Auth, Hasura GraphQL, PostgreSQL, Nhost Functions, Gemini, and Resend. It demonstrates organization-scoped authorization, live execution updates, protected approval/resume, quota enforcement, and four ways to start the same workflow runner.
+## Hosted demo access
 
-## Quick start: run the hosted workflow
+The hosted application is available at [agentweave.kethanvr.tech](https://agentweave.kethanvr.tech). Demo access is provided privately; no account credentials are published in this repository.
 
-1. Open [agentweave.kethanvr.tech/login](https://agentweave.kethanvr.tech/login), choose the **Owner** account, and sign in with the displayed demo password.
-2. Open an existing workflow or select **New workflow**. Review the steps and set the Notify recipient to an email address you can access.
-3. Select **Save** and wait for `Workflow saved securely.` Saving is required before the **Run** button is enabled.
-4. Confirm the run input contains a customer message, then select **Run**. Gemini, conditional routing, and HTTPS enrichment execute first.
-5. When the live monitor shows **Paused**, select **Approve and resume**. AgentWeave then writes the result to PostgreSQL, queues the email, completes the run, and updates quota.
-6. Within a few seconds, verify the email in the recipient inbox and the delivery in Resend. Temporary Event Trigger failures may take up to approximately 30 seconds because Hasura retries twice.
-
-> [!TIP]
-> The correct order is **Edit → Save → Run → Approve and resume → Verify email**. Approval appears only after a run reaches the approval gate.
 
 ## Live deployment
 
 | Service | URL |
 | --- | --- |
 | Application | [agentweave.kethanvr.tech](https://agentweave.kethanvr.tech) |
-| Reviewer login | [agentweave.kethanvr.tech/login](https://agentweave.kethanvr.tech/login) |
+| Sign-in page | [agentweave.kethanvr.tech/login](https://agentweave.kethanvr.tech/login) |
 | Nhost GraphQL API | [nfldghkngnbyryttgdkh.graphql.ap-south-1.nhost.run/v1](https://nfldghkngnbyryttgdkh.graphql.ap-south-1.nhost.run/v1) |
 | Nhost Auth health | [nfldghkngnbyryttgdkh.auth.ap-south-1.nhost.run/v1/healthz](https://nfldghkngnbyryttgdkh.auth.ap-south-1.nhost.run/v1/healthz) |
 | Source | [github.com/Kethanvr/agentweave](https://github.com/Kethanvr/agentweave) |
@@ -89,7 +80,7 @@ The notification is inserted into PostgreSQL, delivered through a Hasura Event T
 
 ## Run the production workflow
 
-1. Open the [reviewer login](https://agentweave.kethanvr.tech/login), choose **Owner**, and sign in with the displayed demo password.
+1. Open the [sign-in page](https://agentweave.kethanvr.tech/login) and use an account provisioned privately for your organization.
 2. On **Workflows**, confirm the organization is **Northstar Support**, the badge is **Owner**, and quota is available.
 3. Select **New workflow**. AgentWeave preloads the six-step **Customer Escalation Workflow**.
 4. Confirm the important configuration before saving:
@@ -189,7 +180,7 @@ Prerequisites: Node.js 20+, Docker, and the [Nhost CLI](https://docs.nhost.io/pl
    cp .env.example .env.local
    ```
 
-   Replace the local admin secret with the value in the ignored `.secrets` file. The included demo password is intentionally public for reviewer access; use the same value for `DEMO_PASSWORD` and `NEXT_PUBLIC_DEMO_PASSWORD` when seeding. Replace or remove it outside this demonstration.
+   Keep the local admin secret and any bootstrap password in an ignored local secrets file or secret manager. Never expose bootstrap credentials through `NEXT_PUBLIC_` variables or documentation.
 
 4. Seed two organizations and five role-specific users.
 
@@ -210,7 +201,7 @@ Prerequisites: Node.js 20+, Docker, and the [Nhost CLI](https://docs.nhost.io/pl
    | `owner@orgb.agentweave.demo` | Helix Operations | owner |
    | `editor@orgb.agentweave.demo` | Helix Operations | editor |
 
-   The login page shows these accounts and the shared password for easy reviewer access. This is a deliberate demo-only exception and is prominently labeled for removal in a real deployment.
+   The login page accepts organization-provisioned Nhost accounts. Do not publish shared account credentials; provision temporary reviewer accounts privately and remove them after review.
 
 5. Start the frontend.
 
@@ -231,7 +222,6 @@ Browser variables:
 ```text
 NEXT_PUBLIC_NHOST_SUBDOMAIN
 NEXT_PUBLIC_NHOST_REGION
-NEXT_PUBLIC_DEMO_PASSWORD
 ```
 
 Nhost Cloud secrets:
@@ -308,8 +298,8 @@ The production frontend is deployed on Vercel at `agentweave.kethanvr.tech`; the
 
 1. Connect this repository to Nhost so migrations, metadata, and root `functions/` deploy together.
 2. Add the two integration secrets and four Function environment variables listed above. Use a verified Resend sender/domain.
-3. Run the bootstrap script against the Cloud Auth and GraphQL URLs using the Cloud admin secret and the shared demo password.
-4. Import the repository into Vercel and set `NEXT_PUBLIC_NHOST_SUBDOMAIN`, `NEXT_PUBLIC_NHOST_REGION`, and the matching `NEXT_PUBLIC_DEMO_PASSWORD`.
+3. Run the bootstrap script against the Cloud Auth and GraphQL URLs using the Cloud admin secret and a unique password supplied through the local `DEMO_PASSWORD` environment variable.
+4. Import the repository into Vercel and set `NEXT_PUBLIC_NHOST_SUBDOMAIN` and `NEXT_PUBLIC_NHOST_REGION`. Configure private server-side secrets in the appropriate Nhost or Vercel secret settings.
 5. Add the Vercel origin to the Nhost Auth client URL and allowed redirect URLs, then repeat the security checks and the walkthrough in [DEMO.md](./DEMO.md) against production.
 
-No API keys, Hasura admin secrets, webhook secrets, Gemini keys, or Resend keys are committed. The shared demo login is intentionally public and must be removed or replaced before adapting this project for real users.
+Never commit API keys, admin secrets, webhook secrets, provider keys, or account passwords. The application does not publish shared demo login credentials.
